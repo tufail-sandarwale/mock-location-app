@@ -1,0 +1,45 @@
+name: Build APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build debug APK
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk MockLocationTester-debug.apk
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MockLocationTester-debug
+          path: MockLocationTester-debug.apk
+
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="build-${{ github.run_number }}"
+          gh release create "$TAG" MockLocationTester-debug.apk \
+            --title "Mock Location Tester ($TAG)" \
+            --notes "Debug build from ${{ github.sha }}. Download the APK on your phone and install (allow 'Install unknown apps')."

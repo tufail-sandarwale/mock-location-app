@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="8dp"
+                android:textStyle="bold"
+                android:text="@string/status_idle" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hint_tap_map"
+                android:textSize="12sp"
+                android:paddingBottom="6dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/latInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_lat"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:importantForAutofill="no" />
+
+                <EditText
+                    android:id="@+id/lngInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:hint="@string/hint_lng"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:importantForAutofill="no" />
+
+                <Button
+                    android:id="@+id/goButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/go" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="8dp">
+
+                <Button
+                    android:id="@+id/startButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/start" />
+
+                <Button
+                    android:id="@+id/stopButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:enabled="false"
+                    android:text="@string/stop" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginVertical="10dp"
+                android:background="#DDDDDD" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/saved_configs"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/savedSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="4dp">
+
+                <EditText
+                    android:id="@+id/nameInput"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/hint_name"
+                    android:inputType="text"
+                    android:importantForAutofill="no" />
+
+                <Button
+                    android:id="@+id/saveButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/save" />
+
+                <Button
+                    android:id="@+id/deleteButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/delete" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/devOptionsButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/open_dev_options" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
