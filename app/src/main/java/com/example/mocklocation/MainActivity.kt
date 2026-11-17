@@ -20,8 +20,10 @@ import androidx.core.content.ContextCompat
 import com.example.mocklocation.databinding.ActivityMainBinding
 import org.osmdroid.config.Configuration
 import org.osmdroid.events.MapEventsReceiver
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.tileprovider.tilesource.TileSourcePolicy
+import org.osmdroid.tileprovider.tilesource.XYTileSource
 import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.overlay.CopyrightOverlay
 import org.osmdroid.views.overlay.MapEventsOverlay
 import org.osmdroid.views.overlay.Marker
 import java.util.Locale
@@ -50,7 +52,9 @@ class MainActivity : AppCompatActivity() {
             this,
             getSharedPreferences("osmdroid", MODE_PRIVATE)
         )
-        Configuration.getInstance().userAgentValue = packageName
+        // OSM blocks generic/placeholder user agents (e.g. "com.example.*") with an "Access blocked" tile.
+        Configuration.getInstance().userAgentValue =
+            "MockLocationApp/${BuildConfig.VERSION_NAME} (Android; $packageName)"
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -69,8 +73,9 @@ class MainActivity : AppCompatActivity() {
     // region Map ---------------------------------------------------------------
 
     private fun setupMap() {
-        binding.map.setTileSource(TileSourceFactory.MAPNIK)
+        binding.map.setTileSource(OSM_TILES)
         binding.map.setMultiTouchControls(true)
+        binding.map.overlays.add(CopyrightOverlay(this))
         binding.map.controller.setZoom(15.0)
         binding.map.controller.setCenter(selected)
 
@@ -334,4 +339,21 @@ class MainActivity : AppCompatActivity() {
 
     // Locale.US so the decimal separator is always '.', otherwise parsing the fields back fails.
     private fun formatCoord(v: Double): String = String.format(Locale.US, "%.6f", v)
+
+    private companion object {
+        // Like MAPNIK but without FLAG_USER_AGENT_NORMALIZED, which would send the blocked
+        // "com.example.mocklocation/1" instead of userAgentValue. Distinct name also skips
+        // "Access blocked" tiles already cached under "Mapnik".
+        val OSM_TILES = XYTileSource(
+            "OpenStreetMap", 0, 19, 256, ".png",
+            arrayOf("https://tile.openstreetmap.org/"),
+            "© OpenStreetMap contributors",
+            TileSourcePolicy(
+                2,
+                TileSourcePolicy.FLAG_NO_BULK or
+                    TileSourcePolicy.FLAG_NO_PREVENTIVE or
+                    TileSourcePolicy.FLAG_USER_AGENT_MEANINGFUL
+            )
+        )
+    }
 }
